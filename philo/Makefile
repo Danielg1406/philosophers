@@ -6,12 +6,15 @@ NAME = philo
 SRCS_DIR = srcs
 OBJS_DIR = objs
 
-SRCS = *.c
-OBJS: $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
+SRCS = srcs/main.c \
+       srcs/checker.c \
+       srcs/utils.c 
+
+OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 all: $(NAME)
 
-$(OBJ_DIR)/%.o: $(SRCS_DIR)/%.c
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 
@@ -22,8 +25,8 @@ clean:
 	rm -rf $(OBJS_DIR)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -f $(NAME)
 
-re: fclean clean
+re: fclean all
 
 .PHONY: all clean fclean re
