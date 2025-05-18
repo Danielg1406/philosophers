@@ -6,7 +6,7 @@
 /*   By: dgomez-a <dgomez-a@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 20:01:55 by dgomez-a          #+#    #+#             */
-/*   Updated: 2025/05/18 20:47:24 by dgomez-a         ###   ########.fr       */
+/*   Updated: 2025/05/18 20:55:51 by dgomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,10 @@ int	argument_checker(int argc, char **argv)
 		return (0);
 	}
 	while (i < argc)
-	{	
+	{
 		if (!is_number(argv[i]))
 			return (0);
 		i++;
 	}
 	return (1);
 }
-
-

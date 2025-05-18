@@ -6,7 +6,7 @@
 /*   By: dgomez-a <dgomez-a@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 20:29:20 by dgomez-a          #+#    #+#             */
-/*   Updated: 2025/05/18 20:37:01 by dgomez-a         ###   ########.fr       */
+/*   Updated: 2025/05/18 20:55:22 by dgomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_atoi(const char *nptr)
 {
 	int	sign;
-	long	num;
+	int	num;
 
 	sign = 1;
 	num = 0;
@@ -23,7 +23,7 @@ int	ft_atoi(const char *nptr)
 		nptr++;
 	if (*nptr == '-' || *nptr == '+')
 	{
-		if(*nptr == '-')
+		if (*nptr == '-')
 			sign = -1;
 		nptr++;
 	}
