@@ -14,14 +14,16 @@
 
 int	parse_input(int argc, char **argv, t_table *philo_table)
 {
-	philo_table->philos_amount = ft_atoi(argv[1]);
-	philo_table->time_to_die = ft_atoi(argv[2]);
-	philo_table->time_to_eat = ft_atoi(argv[3]);
-	philo_table->time_to_sleep = ft_atoi(argv[4]);
+	philo_table->must_eat_rounds = -2;
+	philo_table->flag_must_eat = 0;
+	philo_table->philos_amount = ft_atol(argv[1]);
+	philo_table->time_to_die = ft_atol(argv[2]);
+	philo_table->time_to_eat = ft_atol(argv[3]);
+	philo_table->time_to_sleep = ft_atol(argv[4]);
 	if (argc == 6)
 	{
 		philo_table->flag_must_eat = 1;
-		philo_table->must_eat_rounds = ft_atoi(argv[5]);
+		philo_table->must_eat_rounds = ft_atol(argv[5]);
 	}
 	if (philo_table->philos_amount == -1 || philo_table->time_to_die == -1
 		|| philo_table->time_to_eat == -1 || philo_table->time_to_sleep == -1
@@ -33,11 +35,9 @@ int	parse_input(int argc, char **argv, t_table *philo_table)
 	return (1);
 }
 
-int	initialize_table(int argc, char **argv)
+int	initialize_table(int argc, char **argv, t_table *philo_table)
 {
-	t_table	philo_table;
-
-	if (!parse_input(argc, argv, &philo_table))
+	if (!parse_input(argc, argv, philo_table))
 		return (0);
 	return (1);
 }

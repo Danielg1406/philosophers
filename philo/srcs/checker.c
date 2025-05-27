@@ -42,12 +42,12 @@ int	argument_checker(int argc, char **argv)
 			return (0);
 		i++;
 	}
-	if (ft_atoi(argv[1]) == 0 || ft_atoi(argv[1]) > 200)
+	if (ft_atol(argv[1]) == 0 || ft_atol(argv[1]) > 200)
 	{
 		printf("Error, you need at least one philosopher, and maximum 200\n");
 		return (0);
 	}
-	if (argc == 6 && (ft_atoi(argv[5]) == 0))
+	if (argc == 6 && (ft_atol(argv[5]) == 0))
 	{
 		printf("Error, you need at least one round\n");
 		return (0);

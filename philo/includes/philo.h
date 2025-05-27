@@ -19,6 +19,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <limits.h>
 
 typedef struct s_philosopher
 {
@@ -44,10 +45,10 @@ int					argument_checker(int argc, char **argv);
 int					is_valid_int(char *str);
 
 // INITIALIZATION
-int					initialize_table(int argc, char **argv);
+int					initialize_table(int argc, char **argv, t_table *philo_table);
 
 // UTILS
-int					ft_atoi(const char *nptr);
+int					ft_atol(const char *str);
 size_t				ft_strlen(const char *s);
 
 #endif

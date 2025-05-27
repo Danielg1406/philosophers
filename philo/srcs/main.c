@@ -14,12 +14,15 @@
 
 int	main(int argc, char **argv)
 {
+	t_table	philo_table;
+
 	if (argc != 5 && argc != 6)
 	{
 		printf("Error, wrong amount of arguments\n");
 		return (1);
 	}
-	if (!argument_checker(argc, argv) || !initialize_table(argc, argv))
+	if (!argument_checker(argc, argv) || !initialize_table(argc, argv,
+			&philo_table))
 		return (1);
 	return (0);
 }
