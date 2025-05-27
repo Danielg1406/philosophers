@@ -28,9 +28,23 @@ typedef struct s_philosopher
 	pthread_mutex_t	fork;
 }					t_philosopher;
 
+typedef struct s_table
+{
+	int				philos_amount;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				flag_must_eat;
+	int				must_eat_rounds;
+	t_philosopher	*philos;
+}					t_table;
+
 // CHECKERS
 int					argument_checker(int argc, char **argv);
 int					is_valid_int(char *str);
+
+// INITIALIZATION
+int					initialize_table(int argc, char **argv);
 
 // UTILS
 int					ft_atoi(const char *nptr);

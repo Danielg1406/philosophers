@@ -19,9 +19,7 @@ int	main(int argc, char **argv)
 		printf("Error, wrong amount of arguments\n");
 		return (1);
 	}
-	if (!argument_checker(argc, argv))
+	if (!argument_checker(argc, argv) || !initialize_table(argc, argv))
 		return (1);
-	// if (!initialize_table(argc, argv[1]))
-		// return (1);
 	return (0);
 }

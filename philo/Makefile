@@ -8,7 +8,8 @@ OBJS_DIR = objs
 
 SRCS = srcs/main.c \
        srcs/checker.c \
-       srcs/utils.c 
+			 srcs/initialize.c \
+       srcs/utils.c \
 
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 

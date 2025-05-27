@@ -6,7 +6,7 @@
 /*   By: dgomez-a <dgomez-a@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 20:29:20 by dgomez-a          #+#    #+#             */
-/*   Updated: 2025/05/18 20:55:22 by dgomez-a         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:35:09 by dgomez-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ int	ft_atoi(const char *nptr)
 	while (*nptr >= '0' && *nptr <= '9')
 	{
 		num = num * 10 + (*nptr - '0');
+		if (num * sign > 2147483647)
+			return (-1);
+		if (num * sign < -2147483648)
+			return (0);
 		nptr++;
 	}
 	return (num * sign);
@@ -37,7 +41,7 @@ int	ft_atoi(const char *nptr)
 
 size_t	ft_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i] != '\0')
