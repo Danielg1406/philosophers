@@ -24,7 +24,8 @@ int	parse_input(int argc, char **argv, t_table *philo_table)
 		philo_table->must_eat_rounds = ft_atoi(argv[5]);
 	}
 	if (philo_table->philos_amount == -1 || philo_table->time_to_die == -1
-		|| philo_table->time_to_eat == -1 || philo_table->time_to_sleep == -1)
+		|| philo_table->time_to_eat == -1 || philo_table->time_to_sleep == -1
+		|| philo_table->must_eat_rounds == -1)
 	{
 		printf("Error, input value is bigger than INT_MAX\n");
 		return (0);
