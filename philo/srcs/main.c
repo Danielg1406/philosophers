@@ -21,5 +21,7 @@ int	main(int argc, char **argv)
 	}
 	if (!argument_checker(argc, argv))
 		return (1);
+	// if (!initialize_table(argc, argv[1]))
+		// return (1);
 	return (0);
 }

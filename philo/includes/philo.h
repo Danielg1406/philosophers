@@ -30,9 +30,10 @@ typedef struct s_philosopher
 
 // CHECKERS
 int					argument_checker(int argc, char **argv);
-int					is_number(char *str);
+int					is_valid_int(char *str);
 
 // UTILS
 int					ft_atoi(const char *nptr);
+size_t				ft_strlen(const char *s);
 
 #endif
