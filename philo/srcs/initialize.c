@@ -35,9 +35,25 @@ int	parse_input(int argc, char **argv, t_table *philo_table)
 	return (1);
 }
 
+int	create_philos(int argc, t_table *philo_table)
+{
+	return (1);
+}
+
+// TODO: Malloc wrapper
 int	initialize_table(int argc, char **argv, t_table *philo_table)
 {
-	if (!parse_input(argc, argv, philo_table))
+	pthread_mutex_t	*waiter;
+	pthread_mutex_t	*print_status;
+
+	waiter = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	print_status = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(waiter, NULL);
+	pthread_mutex_init(print_status, NULL);
+	philo_table->waiter = waiter;
+	philo_table->print_status = print_status;
+	if (!parse_input(argc, argv, philo_table) || !create_philos(argc,
+			philo_table))
 		return (0);
 	return (1);
 }
