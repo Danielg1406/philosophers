@@ -77,16 +77,16 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void controlled_sleep(void)
+void	controlled_sleep(void)
 {
-    usleep(50);   // 50 μs gives ~0.05 ms resolution
+	usleep(50);
 }
 
-void msleep(long ms, t_table *t)
+void	msleep(long ms, t_table *t)
 {
-    long start;
+	long	start;
 
-    start = now_ms();
-    while (!t->stop && (now_ms() - start < ms))
-        controlled_sleep();
+	start = now_ms();
+	while (!t->stop && (now_ms() - start < ms))
+		controlled_sleep();
 }
