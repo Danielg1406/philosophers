@@ -12,51 +12,49 @@
 
 #include "philo.h"
 
-int create_philos(t_table *t)
+int	create_philos(t_table *t)
 {
-    int         i;
-    pthread_t   mon;
+	pthread_t	mon;
+	int			i;
 
-    i = 0;
-    while (i < t->philos_amount)
-    {
-        t->philos[i].id = i + 1;
-        t->philos[i].table = t;
-        t->philos[i].last_meal = t->start_time;
-        t->philos[i].meals_eaten = 0;
-        t->philos[i].left_fork = &t->forks[i];
-        t->philos[i].right_fork
-            = &t->forks[(i + 1) % t->philos_amount];
-        if (pthread_create(&t->philos[i].thread, NULL,
-                philo_routine, &t->philos[i]) != 0)
-            return (0);
-        i++;
-    }
-    if (pthread_create(&mon, NULL, monitor_routine, t) != 0)
-        return (0);
-    pthread_detach(mon);
-    return (1);
+	i = 0;
+	while (i < t->philos_amount)
+	{
+		t->philos[i].id = i + 1;
+		t->philos[i].table = t;
+		t->philos[i].last_meal = t->start_time;
+		t->philos[i].meals_eaten = 0;
+		t->philos[i].left_fork = &t->forks[i];
+		t->philos[i].right_fork = &t->forks[(i + 1) % t->philos_amount];
+		if (pthread_create(&t->philos[i].thread, NULL, philo_routine,
+				&t->philos[i]) != 0)
+			return (0);
+		i++;
+	}
+	if (pthread_create(&mon, NULL, monitor_routine, t) != 0)
+		return (0);
+	pthread_detach(mon);
+	return (1);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_table table;
-    int     i;
+	t_table		table;
+	int			i;
 
-    if (argc != 5 && argc != 6)
-    {
-        printf("Error, wrong amount of arguments\n");
-        return (1);
-    }
-    if (!argument_checker(argc, argv)
-        || !initialize_table(argc, argv, &table)
-        || !create_philos(&table))
-        return (1);
-    i = 0;
-    while (i < table.philos_amount)
-    {
-        pthread_join(table.philos[i].thread, NULL);
-        i++;
-    }
-    return (0);
+	if (argc != 5 && argc != 6)
+	{
+		printf("Error, wrong amount of arguments\n");
+		return (1);
+	}
+	if (!argument_checker(argc, argv) || !initialize_table(argc, argv, &table)
+		|| !create_philos(&table))
+		return (1);
+	i = 0;
+	while (i < table.philos_amount)
+	{
+		pthread_join(table.philos[i].thread, NULL);
+		i++;
+	}
+	return (0);
 }
