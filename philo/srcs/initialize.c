@@ -10,50 +10,58 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// initialize.c
 #include "philo.h"
 
-int	parse_input(int argc, char **argv, t_table *philo_table)
+static int  alloc_table(t_table *t)
 {
-	philo_table->must_eat_rounds = -2;
-	philo_table->flag_must_eat = 0;
-	philo_table->philos_amount = ft_atol(argv[1]);
-	philo_table->time_to_die = ft_atol(argv[2]);
-	philo_table->time_to_eat = ft_atol(argv[3]);
-	philo_table->time_to_sleep = ft_atol(argv[4]);
-	if (argc == 6)
-	{
-		philo_table->flag_must_eat = 1;
-		philo_table->must_eat_rounds = ft_atol(argv[5]);
-	}
-	if (philo_table->philos_amount == -1 || philo_table->time_to_die == -1
-		|| philo_table->time_to_eat == -1 || philo_table->time_to_sleep == -1
-		|| philo_table->must_eat_rounds == -1)
-	{
-		printf("Error, input value is bigger than INT_MAX\n");
-		return (0);
-	}
-	return (1);
+    int i;
+
+    t->philos = malloc(sizeof(t_philosopher) * t->philos_amount);
+    t->forks = malloc(sizeof(pthread_mutex_t) * t->philos_amount);
+    t->queue = malloc(sizeof(int) * t->philos_amount);
+    t->waiter = malloc(sizeof(pthread_mutex_t));
+    t->print_status = malloc(sizeof(pthread_mutex_t));
+    t->q_mutex = malloc(sizeof(pthread_mutex_t));
+    if (!t->philos || !t->forks || !t->queue
+        || !t->waiter || !t->print_status || !t->q_mutex)
+        return (0);
+    pthread_mutex_init(t->waiter, NULL);
+    pthread_mutex_init(t->print_status, NULL);
+    pthread_mutex_init(t->q_mutex, NULL);
+    i = 0;
+    while (i < t->philos_amount)
+    {
+        pthread_mutex_init(&t->forks[i], NULL);
+        i++;
+    }
+    t->q_head = 0;
+    t->q_tail = 0;
+    return (1);
 }
 
-int	create_philos(int argc, t_table *philo_table)
+int initialize_table(int argc, char **argv, t_table *t)
 {
-	return (1);
-}
+    /* 1) parse arguments into t_table */
+    t->philos_amount  = ft_atol(argv[1]);
+    t->time_to_die    = ft_atol(argv[2]);
+    t->time_to_eat    = ft_atol(argv[3]);
+    t->time_to_sleep  = ft_atol(argv[4]);
+    if (argc == 6)
+    {
+        t->flag_must_eat    = 1;
+        t->must_eat_rounds  = ft_atol(argv[5]);
+    }
+    else
+        t->flag_must_eat = 0;
 
-// TODO: Malloc wrapper
-int	initialize_table(int argc, char **argv, t_table *philo_table)
-{
-	pthread_mutex_t	*waiter;
-	pthread_mutex_t	*print_status;
+    /* 2) sanity check + allocate all arrays and mutexes */
+    if (!argument_checker(argc, argv)
+        || !alloc_table(t))
+        return (0);
 
-	waiter = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	print_status = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(waiter, NULL);
-	pthread_mutex_init(print_status, NULL);
-	philo_table->waiter = waiter;
-	philo_table->print_status = print_status;
-	if (!parse_input(argc, argv, philo_table) || !create_philos(argc,
-			philo_table))
-		return (0);
-	return (1);
+    /* 3) initial state */
+    t->stop       = 0;
+    t->start_time = now_ms();
+    return (1);
 }
