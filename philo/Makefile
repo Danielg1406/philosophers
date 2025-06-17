@@ -10,6 +10,7 @@ SRCS = srcs/main.c \
        srcs/checker.c \
 			 srcs/initialize.c \
        srcs/utils.c \
+			 srcs/routine.c \
 
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
