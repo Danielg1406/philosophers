@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// initialize.c
 #include "philo.h"
 
 static int  alloc_table(t_table *t)

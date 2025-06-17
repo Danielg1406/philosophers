@@ -21,10 +21,6 @@ void *philo_routine(void *arg)
     t_philosopher  *p = arg;
     t_table        *t = p->table;
 
-    /* 1) initial stagger: even IDs sleep 50 ms */
-    if (p->id % 2 == 0)
-        usleep(50000);
-
     while (!t->stop)
     {
         print_status(t, p->id, "is thinking");
