@@ -38,8 +38,11 @@ int	argument_checker(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		if (!is_valid_int(argv[i]))
+		if (!is_valid_int(argv[i]) || ft_atol(argv[i]) == -1)
+		{
+			printf("Error, invalid INT\n");
 			return (0);
+		}
 		i++;
 	}
 	if (ft_atol(argv[1]) == 0 || ft_atol(argv[1]) > 200)
