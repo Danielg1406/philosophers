@@ -82,8 +82,8 @@ void	*monitor_routine(void *arg)
 		{
 			if ((now_ms() - t->philos[i].last_meal) > t->time_to_die)
 			{
-				t->stop = 1;
 				print_status(t, t->philos[i].id, "died");
+				t->stop = 1;
 				return (NULL);
 			}
 			i++;
