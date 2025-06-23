@@ -26,6 +26,18 @@ void	*philo_routine(void *arg)
 	while (!t->stop)
 	{
 		print_status(t, p->id, "is thinking");
+		if (t->philos_amount == 1)
+		{
+			pthread_mutex_lock(p->left_fork);
+			print_status(t, p->id, "has taken a fork");
+			/* wait until he starves */
+			msleep(t->time_to_die, t);
+			print_status(t, p->id, "died");
+			t->stop = 1;
+			pthread_mutex_unlock(p->left_fork);
+			/* after msleep the monitor will print “died” and set t->stop */
+			return (NULL);
+		}
 		/* 2) queue up for the waiter */
 		pthread_mutex_lock(t->q_mutex);
 		t->queue[t->q_tail] = p->id;
