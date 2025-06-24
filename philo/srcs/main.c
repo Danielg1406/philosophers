@@ -12,28 +12,29 @@
 
 #include "philo.h"
 
-int	create_philos(t_table *t)
+int	create_philos(t_table *table)
 {
-	pthread_t	mon;
+	pthread_t	watcher;
 	int			i;
 
 	i = 0;
-	while (i < t->philos_amount)
+	while (i < table->philos_amount)
 	{
-		t->philos[i].id = i + 1;
-		t->philos[i].table = t;
-		t->philos[i].last_meal = t->start_time;
-		t->philos[i].meals_eaten = 0;
-		t->philos[i].left_fork = &t->forks[i];
-		t->philos[i].right_fork = &t->forks[(i + 1) % t->philos_amount];
-		if (pthread_create(&t->philos[i].thread, NULL, philo_routine,
-				&t->philos[i]) != 0)
+		table->philos[i].id = i + 1;
+		table->philos[i].table = table;
+		table->philos[i].last_meal = table->start_time;
+		table->philos[i].meals_eaten = 0;
+		table->philos[i].left_fork = &table->forks[i];
+		table->philos[i].right_fork = &table->forks[(i + 1)
+			% table->philos_amount];
+		if (pthread_create(&table->philos[i].thread, NULL, philo_routine,
+				&table->philos[i]) != 0)
 			return (0);
 		i++;
 	}
-	if (pthread_create(&mon, NULL, monitor_routine, t) != 0)
+	if (pthread_create(&watcher, NULL, watcher_routine, table) != 0)
 		return (0);
-	pthread_detach(mon);
+	pthread_detach(watcher);
 	return (1);
 }
 

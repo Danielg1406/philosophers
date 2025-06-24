@@ -67,26 +67,20 @@ int	ft_atol(const char *str)
 	return (num * sign);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i] != '\0')
+	while (str[i] != '\0')
 		i++;
 	return (i);
 }
 
-void	controlled_sleep(void)
+void	print_status(t_table *table, int id, char *msg)
 {
-	usleep(50);
-}
-
-void	msleep(long ms, t_table *t)
-{
-	long	start;
-
-	start = now_ms();
-	while (!t->stop && (now_ms() - start < ms))
-		controlled_sleep();
+	pthread_mutex_lock(table->print_status);
+	if (!table->flag_dead)
+		printf("%ld %d %s\n", now_ms() - table->start_time, id, msg);
+	pthread_mutex_unlock(table->print_status);
 }

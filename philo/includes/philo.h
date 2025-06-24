@@ -17,7 +17,6 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
 
@@ -26,7 +25,6 @@ typedef struct s_table	t_table;
 typedef struct s_philosopher
 {
 	int				id;
-	int				flag_dead;
 	int				meals_eaten;
 	long			last_meal;
 	pthread_t		thread;
@@ -43,31 +41,33 @@ typedef struct s_table
 	int				time_to_sleep;
 	int				flag_must_eat;
 	int				must_eat_rounds;
-	int				stop;
+	int				flag_dead;
 	long			start_time;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*print_status;
 	t_philosopher	*philos;
 }			t_table;
 
-/* CHECKERS */
+// CHECKERS
 int		argument_checker(int argc, char **argv);
 int		is_valid_int(char *str);
 
-/* INITIALIZATION */
+// INITIALIZATION
 int		initialize_table(int argc, char **argv, t_table *table);
-int		create_philos(t_table *t);
+int		create_philos(t_table *table);
 
-/* UTILS */
+// UTILS
 int		ft_atol(const char *str);
-size_t	ft_strlen(const char *s);
-long	now_ms(void);
+size_t	ft_strlen(const char *str);
 void	print_status(t_table *table, int id, char *msg);
-void	controlled_sleep(void);
-void	msleep(long ms, t_table *t);
 
-/* ROUTINES */
+// ROUTINES
 void	*philo_routine(void *arg);
-void	*monitor_routine(void *arg);
+void	*watcher_routine(void *arg);
+
+// TIME
+void	controlled_sleep(void);
+void	msleep(long ms, t_table *table);
+long	now_ms(void);
 
 #endif

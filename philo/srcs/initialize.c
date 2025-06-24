@@ -12,41 +12,41 @@
 
 #include "philo.h"
 
-static int	alloc_table(t_table *t)
+static int	alloc_table(t_table *table)
 {
 	int	i;
 
-	t->philos = malloc(sizeof(t_philosopher) * t->philos_amount);
-	t->forks = malloc(sizeof(pthread_mutex_t) * t->philos_amount);
-	t->print_status = malloc(sizeof(pthread_mutex_t));
-	if (!t->philos || !t->forks || !t->print_status)
+	table->philos = malloc(sizeof(t_philosopher) * table->philos_amount);
+	table->forks = malloc(sizeof(pthread_mutex_t) * table->philos_amount);
+	table->print_status = malloc(sizeof(pthread_mutex_t));
+	if (!table->philos || !table->forks || !table->print_status)
 		return (0);
-	pthread_mutex_init(t->print_status, NULL);
+	pthread_mutex_init(table->print_status, NULL);
 	i = 0;
-	while (i < t->philos_amount)
+	while (i < table->philos_amount)
 	{
-		pthread_mutex_init(&t->forks[i], NULL);
+		pthread_mutex_init(&table->forks[i], NULL);
 		i++;
 	}
 	return (1);
 }
 
-int	initialize_table(int argc, char **argv, t_table *t)
+int	initialize_table(int argc, char **argv, t_table *table)
 {
-	t->philos_amount = ft_atol(argv[1]);
-	t->time_to_die = ft_atol(argv[2]);
-	t->time_to_eat = ft_atol(argv[3]);
-	t->time_to_sleep = ft_atol(argv[4]);
+	table->philos_amount = ft_atol(argv[1]);
+	table->time_to_die = ft_atol(argv[2]);
+	table->time_to_eat = ft_atol(argv[3]);
+	table->time_to_sleep = ft_atol(argv[4]);
 	if (argc == 6)
 	{
-		t->flag_must_eat = 1;
-		t->must_eat_rounds = ft_atol(argv[5]);
+		table->flag_must_eat = 1;
+		table->must_eat_rounds = ft_atol(argv[5]);
 	}
 	else
-		t->flag_must_eat = 0;
-	if (!argument_checker(argc, argv) || !alloc_table(t))
+		table->flag_must_eat = 0;
+	if (!argument_checker(argc, argv) || !alloc_table(table))
 		return (0);
-	t->stop = 0;
-	t->start_time = now_ms();
+	table->flag_dead = 0;
+	table->start_time = now_ms();
 	return (1);
 }
