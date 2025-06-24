@@ -44,14 +44,9 @@ typedef struct s_table
 	int				flag_must_eat;
 	int				must_eat_rounds;
 	int				stop;
-	int				*queue;
-	int				q_head;
-	int				q_tail;
 	long			start_time;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*waiter;
 	pthread_mutex_t	*print_status;
-	pthread_mutex_t	*q_mutex;
 	t_philosopher	*philos;
 }			t_table;
 

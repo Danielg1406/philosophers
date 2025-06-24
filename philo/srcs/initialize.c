@@ -18,24 +18,16 @@ static int	alloc_table(t_table *t)
 
 	t->philos = malloc(sizeof(t_philosopher) * t->philos_amount);
 	t->forks = malloc(sizeof(pthread_mutex_t) * t->philos_amount);
-	t->queue = malloc(sizeof(int) * t->philos_amount);
-	t->waiter = malloc(sizeof(pthread_mutex_t));
 	t->print_status = malloc(sizeof(pthread_mutex_t));
-	t->q_mutex = malloc(sizeof(pthread_mutex_t));
-	if (!t->philos || !t->forks || !t->queue
-		|| !t->waiter || !t->print_status || !t->q_mutex)
+	if (!t->philos || !t->forks || !t->print_status)
 		return (0);
-	pthread_mutex_init(t->waiter, NULL);
 	pthread_mutex_init(t->print_status, NULL);
-	pthread_mutex_init(t->q_mutex, NULL);
 	i = 0;
 	while (i < t->philos_amount)
 	{
 		pthread_mutex_init(&t->forks[i], NULL);
 		i++;
 	}
-	t->q_head = 0;
-	t->q_tail = 0;
 	return (1);
 }
 

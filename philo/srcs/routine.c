@@ -23,61 +23,49 @@ void	*philo_routine(void *arg)
 
 	p = arg;
 	t = p->table;
+
+	// Stagger even philosophers to reduce contention
+	if (p->id % 2 == 0)
+		msleep(t->time_to_eat, t);
+
 	while (!t->stop)
 	{
+		// Thinking
 		print_status(t, p->id, "is thinking");
-		if (t->philos_amount == 1)
+
+		// Pick up forks in odd-even order to prevent deadlock
+		if (p->id % 2 == 0)
+		{
+			pthread_mutex_lock(p->right_fork);
+			print_status(t, p->id, "has taken a fork");
+			pthread_mutex_lock(p->left_fork);
+			print_status(t, p->id, "has taken a fork");
+		}
+		else
 		{
 			pthread_mutex_lock(p->left_fork);
 			print_status(t, p->id, "has taken a fork");
-			/* wait until he starves */
-			msleep(t->time_to_die, t);
-			print_status(t, p->id, "died");
-			t->stop = 1;
-			pthread_mutex_unlock(p->left_fork);
-			/* after msleep the monitor will print “died” and set t->stop */
-			return (NULL);
+			pthread_mutex_lock(p->right_fork);
+			print_status(t, p->id, "has taken a fork");
 		}
-		/* 2) queue up for the waiter */
-		pthread_mutex_lock(t->q_mutex);
-		t->queue[t->q_tail] = p->id;
-		t->q_tail = (t->q_tail + 1) % t->philos_amount;
-		pthread_mutex_unlock(t->q_mutex);
-		/* busy-wait until it’s our turn… */
-		while (1)
-		{
-			pthread_mutex_lock(t->q_mutex);
-			if (t->queue[t->q_head] == p->id)
-			{
-				pthread_mutex_unlock(t->q_mutex);
-				pthread_mutex_lock(t->waiter);
-				pthread_mutex_lock(t->q_mutex);
-				t->q_head = (t->q_head + 1) % t->philos_amount;
-				pthread_mutex_unlock(t->q_mutex);
-				break ;
-			}
-			pthread_mutex_unlock(t->q_mutex);
-			controlled_sleep();
-		}
-		/* take forks */
-		pthread_mutex_lock(p->left_fork);
-		print_status(t, p->id, "has taken a fork");
-		pthread_mutex_lock(p->right_fork);
-		print_status(t, p->id, "has taken a fork");
-		pthread_mutex_unlock(t->waiter);
-		/* eat for exactly time_to_eat ms */
+
+		// Eating
 		p->last_meal = now_ms();
 		print_status(t, p->id, "is eating");
 		msleep(t->time_to_eat, t);
 		pthread_mutex_unlock(p->left_fork);
 		pthread_mutex_unlock(p->right_fork);
+
+		// Count meals and possibly exit
 		p->meals_eaten++;
 		if (t->flag_must_eat && p->meals_eaten >= t->must_eat_rounds)
-			break ;
-		/* sleep for exactly time_to_sleep ms */
+			break;
+
+		// Sleeping
 		print_status(t, p->id, "is sleeping");
 		msleep(t->time_to_sleep, t);
 	}
+
 	return (NULL);
 }
 
