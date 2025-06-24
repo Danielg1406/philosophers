@@ -1,5 +1,45 @@
 #include "philo.h"
 
+static void	philo_think(t_philosopher *philo)
+{
+	print_status(philo->table, philo->id, "is thinking");
+}
+
+static void	philo_sleep(t_philosopher *philo)
+{
+	print_status(philo->table, philo->id, "is sleeping");
+	msleep(philo->table->time_to_sleep, philo->table);
+}
+
+static int	philo_eat(t_philosopher *philo)
+{
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		print_status(philo->table, philo->id, "has taken a fork");
+		pthread_mutex_lock(philo->left_fork);
+		print_status(philo->table, philo->id, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(philo->left_fork);
+		print_status(philo->table, philo->id, "has taken a fork");
+		pthread_mutex_lock(philo->right_fork);
+		print_status(philo->table, philo->id, "has taken a fork");
+	}
+	philo->last_meal = now_ms();
+	print_status(philo->table, philo->id, "is eating");
+	msleep(philo->table->time_to_eat, philo->table);
+	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
+	philo->meals_eaten++;
+	if (philo->table->flag_must_eat
+		&& (philo->meals_eaten >= philo->table->must_eat_rounds))
+		return (1);
+	return (0);
+}
+
+// TODO: Handle one philo 
 void	*philo_routine(void *arg)
 {
 	t_philosopher	*philo;
@@ -7,41 +47,14 @@ void	*philo_routine(void *arg)
 
 	philo = arg;
 	table = philo->table;
-	// Stagger even philosophers to reduce contention
 	if (philo->id % 2 == 0)
 		msleep(table->time_to_eat, table);
 	while (!table->flag_dead)
 	{
-		// Thinking
-		print_status(table, philo->id, "is thinking");
-		// Pick up forks in odd-even order to prevent deadlock
-		if (philo->id % 2 == 0)
-		{
-			pthread_mutex_lock(philo->right_fork);
-			print_status(table, philo->id, "has taken a fork");
-			pthread_mutex_lock(philo->left_fork);
-			print_status(table, philo->id, "has taken a fork");
-		}
-		else
-		{
-			pthread_mutex_lock(philo->left_fork);
-			print_status(table, philo->id, "has taken a fork");
-			pthread_mutex_lock(philo->right_fork);
-			print_status(table, philo->id, "has taken a fork");
-		}
-		// Eating
-		philo->last_meal = now_ms();
-		print_status(table, philo->id, "is eating");
-		msleep(table->time_to_eat, table);
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
-		// Count meals and possibly exit
-		philo->meals_eaten++;
-		if (table->flag_must_eat && philo->meals_eaten >= table->must_eat_rounds)
+		philo_think(philo);
+		if (philo_eat(philo))
 			break ;
-		// Sleeping
-		print_status(table, philo->id, "is sleeping");
-		msleep(table->time_to_sleep, table);
+		philo_sleep(philo);
 	}
 	return (NULL);
 }
