@@ -47,6 +47,8 @@ int	main(int argc, char **argv)
 		pthread_join(table.philos[i].thread, NULL);
 		i++;
 	}
+	if (table.philos_amount > 1)
+		pthread_join(table.watcher, NULL);
 	cleanup_table(&table);
 	return (0);
 }

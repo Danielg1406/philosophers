@@ -45,6 +45,7 @@ typedef struct s_table
 	int							flag_all_ate;
 	int							flag_dead;
 	long						start_time;
+	pthread_t					watcher;
 	pthread_mutex_t				*forks;
 	pthread_mutex_t				print_status;
 	pthread_mutex_t				state_mutex;

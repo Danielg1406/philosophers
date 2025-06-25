@@ -14,7 +14,6 @@
 
 int	create_philos(t_table *table)
 {
-	pthread_t	watcher;
 	int			i;
 
 	i = 0;
@@ -34,9 +33,8 @@ int	create_philos(t_table *table)
 	}
 	if (table->philos_amount > 1)
 	{
-		if (pthread_create(&watcher, NULL, watcher_routine, table) != 0)
+		if (pthread_create(&table->watcher, NULL, watcher_routine, table) != 0)
 			return (0);
-		pthread_detach(watcher);
 	}
 	return (1);
 }

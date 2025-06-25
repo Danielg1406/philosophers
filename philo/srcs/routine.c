@@ -66,6 +66,8 @@ void	*philo_routine(void *arg)
 {
 	t_philosopher	*philo;
 	t_table			*table;
+	int				dead;
+	int				done;
 
 	philo = arg;
 	table = philo->table;
@@ -76,11 +78,20 @@ void	*philo_routine(void *arg)
 	}
 	if (philo->id % 2 == 0)
 		go_to_bed(table->time_to_eat, table);
-	while (!table->flag_dead && !(table->flag_must_eat && table->flag_all_ate))
+	while (1)
 	{
+		pthread_mutex_lock(&table->state_mutex);
+		dead = table->flag_dead;
+		done = table->flag_must_eat && table->flag_all_ate;
+		pthread_mutex_unlock(&table->state_mutex);
+		if (dead || done)
+			break ;
 		philo_eat(philo);
-		if (table->flag_must_eat
-			&& philo->meals_eaten >= table->must_eat_rounds)
+		pthread_mutex_lock(&table->state_mutex);
+		done = table->flag_must_eat
+			&& philo->meals_eaten >= table->must_eat_rounds;
+		pthread_mutex_unlock(&table->state_mutex);
+		if (done)
 			break ;
 		philo_sleep(philo);
 		philo_think(philo);

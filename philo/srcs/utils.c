@@ -79,8 +79,14 @@ size_t	ft_strlen(const char *str)
 
 void	print_status(t_table *table, int id, char *msg)
 {
+	int	dead;
+
+	pthread_mutex_lock(&table->state_mutex);
+	dead = table->flag_dead;
+	pthread_mutex_unlock(&table->state_mutex);
+	if (dead)
+		return ;
 	pthread_mutex_lock(&table->print_status);
-	if (!table->flag_dead)
-		printf("%ld %d %s\n", present_ms() - table->start_time, id, msg);
+	printf("%ld %d %s\n", present_ms() - table->start_time, id, msg);
 	pthread_mutex_unlock(&table->print_status);
 }
