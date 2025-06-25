@@ -67,8 +67,8 @@ void	*philo_routine(void *arg);
 void	*watcher_routine(void *arg);
 
 // TIME
-void	controlled_sleep(void);
-void	msleep(long ms, t_table *table);
-long	now_ms(void);
+void	sleep_gap(void);
+void	go_to_bed(long ms, t_table *table);
+long	present_ms(void);
 
 #endif

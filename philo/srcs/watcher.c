@@ -35,11 +35,16 @@ static int	death_watcher(t_table *table)
 	i = 0;
 	while (i < table->philos_amount)
 	{
-		if ((now_ms() - table->philos[i].last_meal) > table->time_to_die)
+		if (!(table->flag_must_eat
+				&& table->philos[i].meals_eaten >= table->must_eat_rounds))
 		{
-			print_status(table, table->philos[i].id, "died");
-			table->flag_dead = 1;
-			return (1);
+			if ((present_ms()
+					- table->philos[i].last_meal) > table->time_to_die)
+			{
+				print_status(table, table->philos[i].id, "died");
+				table->flag_dead = 1;
+				return (1);
+			}
 		}
 		i++;
 	}
@@ -55,7 +60,7 @@ void	*watcher_routine(void *arg)
 	{
 		if (table->flag_must_eat && must_eat_watcher(table))
 			break ;
-		else if (death_watcher(table))
+		if (death_watcher(table))
 			break ;
 		usleep(1000);
 	}

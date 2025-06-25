@@ -12,21 +12,21 @@
 
 #include "philo.h"
 
-void	controlled_sleep(void)
+void	sleep_gap(void)
 {
 	usleep(50);
 }
 
-void	msleep(long ms, t_table *t)
+void	go_to_bed(long ms, t_table *t)
 {
 	long	start;
 
-	start = now_ms();
-	while (!t->flag_dead && (now_ms() - start < ms))
-		controlled_sleep();
+	start = present_ms();
+	while (!t->flag_dead && (present_ms() - start < ms))
+		sleep_gap();
 }
 
-long	now_ms(void)
+long	present_ms(void)
 {
 	struct timeval	tv;
 

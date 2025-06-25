@@ -81,6 +81,6 @@ void	print_status(t_table *table, int id, char *msg)
 {
 	pthread_mutex_lock(table->print_status);
 	if (!table->flag_dead)
-		printf("%ld %d %s\n", now_ms() - table->start_time, id, msg);
+		printf("%ld %d %s\n", present_ms() - table->start_time, id, msg);
 	pthread_mutex_unlock(table->print_status);
 }

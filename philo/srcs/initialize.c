@@ -80,6 +80,6 @@ int	initialize_table(int argc, char **argv, t_table *table)
 	if (!argument_checker(argc, argv) || !alloc_table(table))
 		return (0);
 	table->flag_dead = 0;
-	table->start_time = now_ms();
+	table->start_time = present_ms();
 	return (1);
 }
