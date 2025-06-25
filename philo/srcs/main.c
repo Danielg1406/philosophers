@@ -12,10 +12,26 @@
 
 #include "philo.h"
 
+static void	cleanup_table(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->philos_amount)
+	{
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(table->print_status);
+	free(table->forks);
+	free(table->philos);
+	free(table->print_status);
+}
+
 int	main(int argc, char **argv)
 {
-	t_table		table;
-	int			i;
+	t_table	table;
+	int		i;
 
 	if (argc != 5 && argc != 6)
 	{
@@ -31,5 +47,6 @@ int	main(int argc, char **argv)
 		pthread_join(table.philos[i].thread, NULL);
 		i++;
 	}
+	cleanup_table(&table);
 	return (0);
 }
