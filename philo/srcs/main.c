@@ -22,10 +22,10 @@ static void	cleanup_table(t_table *table)
 		pthread_mutex_destroy(&table->forks[i]);
 		i++;
 	}
-	pthread_mutex_destroy(table->print_status);
+	pthread_mutex_destroy(&table->print_status);
+	pthread_mutex_destroy(&table->state_mutex);
 	free(table->forks);
 	free(table->philos);
-	free(table->print_status);
 }
 
 int	main(int argc, char **argv)

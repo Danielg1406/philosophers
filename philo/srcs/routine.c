@@ -39,12 +39,16 @@ static void	philo_eat(t_philosopher *philo)
 		pthread_mutex_lock(philo->right_fork);
 		print_status(philo->table, philo->id, "has taken a fork");
 	}
+	pthread_mutex_lock(&philo->table->state_mutex);
 	philo->last_meal = present_ms();
+	pthread_mutex_unlock(&philo->table->state_mutex);
 	print_status(philo->table, philo->id, "is eating");
 	go_to_bed(philo->table->time_to_eat, philo->table);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_lock(&philo->table->state_mutex);
 	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->table->state_mutex);
 }
 
 static void	handle_single_philo(t_philosopher *philo)

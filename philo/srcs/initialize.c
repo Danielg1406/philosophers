@@ -47,16 +47,18 @@ static int	alloc_table(t_table *table)
 
 	table->philos = malloc(sizeof(t_philosopher) * table->philos_amount);
 	table->forks = malloc(sizeof(pthread_mutex_t) * table->philos_amount);
-	table->print_status = malloc(sizeof(pthread_mutex_t));
-	if (!table->philos || !table->forks || !table->print_status)
+	if (!table->philos || !table->forks)
 		return (0);
-	pthread_mutex_init(table->print_status, NULL);
 	i = 0;
 	while (i < table->philos_amount)
 	{
 		pthread_mutex_init(&table->forks[i], NULL);
 		i++;
 	}
+	if (pthread_mutex_init(&table->print_status, NULL) != 0)
+		return (0);
+	if (pthread_mutex_init(&table->state_mutex, NULL) != 0)
+		return (0);
 	return (1);
 }
 

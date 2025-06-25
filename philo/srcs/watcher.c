@@ -15,34 +15,46 @@
 static int	must_eat_watcher(t_table *table)
 {
 	int	i;
+	int	eaten;
 
 	i = 0;
 	while (i < table->philos_amount)
 	{
-		if (table->philos[i].meals_eaten < table->must_eat_rounds)
+		pthread_mutex_lock(&table->state_mutex);
+		eaten = table->philos[i].meals_eaten;
+		pthread_mutex_unlock(&table->state_mutex);
+		if (eaten < table->must_eat_rounds)
 			return (0);
 		i++;
 	}
+	pthread_mutex_lock(&table->state_mutex);
 	table->flag_all_ate = 1;
 	table->flag_dead = 1;
+	pthread_mutex_unlock(&table->state_mutex);
 	return (1);
 }
 
 static int	death_watcher(t_table *table)
 {
-	int	i;
+	int		i;
+	long	last;
+	int		eaten;
 
 	i = 0;
 	while (i < table->philos_amount)
 	{
-		if (!(table->flag_must_eat
-				&& table->philos[i].meals_eaten >= table->must_eat_rounds))
+		pthread_mutex_lock(&table->state_mutex);
+		eaten = table->philos[i].meals_eaten;
+		last = table->philos[i].last_meal;
+		pthread_mutex_unlock(&table->state_mutex);
+		if (!(table->flag_must_eat && eaten >= table->must_eat_rounds))
 		{
-			if ((present_ms()
-					- table->philos[i].last_meal) > table->time_to_die)
+			if ((present_ms() - last) > table->time_to_die)
 			{
 				print_status(table, table->philos[i].id, "died");
+				pthread_mutex_lock(&table->state_mutex);
 				table->flag_dead = 1;
+				pthread_mutex_unlock(&table->state_mutex);
 				return (1);
 			}
 		}
