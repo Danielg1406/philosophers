@@ -12,11 +12,6 @@
 
 #include "philo.h"
 
-static void	philo_think(t_philosopher *philo)
-{
-	print_status(philo->table, philo->id, "is thinking");
-}
-
 static void	philo_sleep(t_philosopher *philo)
 {
 	print_status(philo->table, philo->id, "is sleeping");
@@ -62,12 +57,35 @@ static void	handle_single_philo(t_philosopher *philo)
 	philo->table->flag_dead = 1;
 }
 
+static void	philo_round(t_philosopher *philo)
+{
+	int	dead;
+	int	done;
+
+	while (1)
+	{
+		pthread_mutex_lock(&philo->table->state_mutex);
+		dead = philo->table->flag_dead;
+		done = philo->table->flag_must_eat && philo->table->flag_all_ate;
+		pthread_mutex_unlock(&philo->table->state_mutex);
+		if (dead || done)
+			break ;
+		philo_eat(philo);
+		pthread_mutex_lock(&philo->table->state_mutex);
+		done = philo->table->flag_must_eat
+			&& philo->meals_eaten >= philo->table->must_eat_rounds;
+		pthread_mutex_unlock(&philo->table->state_mutex);
+		if (done)
+			break ;
+		philo_sleep(philo);
+		print_status(philo->table, philo->id, "is thinking");
+	}
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philosopher	*philo;
 	t_table			*table;
-	int				dead;
-	int				done;
 
 	philo = arg;
 	table = philo->table;
@@ -78,23 +96,6 @@ void	*philo_routine(void *arg)
 	}
 	if (philo->id % 2 == 0)
 		go_to_bed(table->time_to_eat, table);
-	while (1)
-	{
-		pthread_mutex_lock(&table->state_mutex);
-		dead = table->flag_dead;
-		done = table->flag_must_eat && table->flag_all_ate;
-		pthread_mutex_unlock(&table->state_mutex);
-		if (dead || done)
-			break ;
-		philo_eat(philo);
-		pthread_mutex_lock(&table->state_mutex);
-		done = table->flag_must_eat
-			&& philo->meals_eaten >= table->must_eat_rounds;
-		pthread_mutex_unlock(&table->state_mutex);
-		if (done)
-			break ;
-		philo_sleep(philo);
-		philo_think(philo);
-	}
+	philo_round(philo);
 	return (NULL);
 }
