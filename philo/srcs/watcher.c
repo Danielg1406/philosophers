@@ -24,6 +24,7 @@ static int	must_eat_watcher(t_table *table)
 		i++;
 	}
 	table->flag_all_ate = 1;
+	table->flag_dead = 1;
 	return (1);
 }
 

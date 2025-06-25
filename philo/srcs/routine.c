@@ -74,9 +74,12 @@ void	*philo_routine(void *arg)
 		msleep(table->time_to_eat, table);
 	while (!table->flag_dead && !(table->flag_must_eat && table->flag_all_ate))
 	{
-		philo_think(philo);
 		philo_eat(philo);
+		if (table->flag_must_eat
+			&& philo->meals_eaten >= table->must_eat_rounds)
+			break ;
 		philo_sleep(philo);
+		philo_think(philo);
 	}
 	return (NULL);
 }
