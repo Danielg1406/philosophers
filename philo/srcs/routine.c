@@ -39,7 +39,17 @@ static int	philo_eat(t_philosopher *philo)
 	return (0);
 }
 
-// TODO: Handle one philo 
+static void	handle_single_philo(t_philosopher *philo)
+{
+	print_status(philo->table, philo->id, "is thinking");
+	pthread_mutex_lock(philo->left_fork);
+	print_status(philo->table, philo->id, "has taken a fork");
+	msleep(philo->table->time_to_die, philo->table);
+	pthread_mutex_unlock(philo->left_fork);
+	print_status(philo->table, philo->id, "died");
+	philo->table->flag_dead = 1;
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philosopher	*philo;
@@ -47,6 +57,11 @@ void	*philo_routine(void *arg)
 
 	philo = arg;
 	table = philo->table;
+	if (table->philos_amount == 1)
+	{
+		handle_single_philo(philo);
+		return (NULL);
+	}
 	if (philo->id % 2 == 0)
 		msleep(table->time_to_eat, table);
 	while (!table->flag_dead)
@@ -55,30 +70,6 @@ void	*philo_routine(void *arg)
 		if (philo_eat(philo))
 			break ;
 		philo_sleep(philo);
-	}
-	return (NULL);
-}
-
-void	*watcher_routine(void *arg)
-{
-	t_table	*table;
-	int		i;
-
-	table = arg;
-	while (!table->flag_dead)
-	{
-		i = 0;
-		while (i < table->philos_amount)
-		{
-			if ((now_ms() - table->philos[i].last_meal) > table->time_to_die)
-			{
-				print_status(table, table->philos[i].id, "died");
-				table->flag_dead = 1;
-				return (NULL);
-			}
-			i++;
-		}
-		usleep(1000);
 	}
 	return (NULL);
 }
