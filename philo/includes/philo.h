@@ -41,6 +41,7 @@ typedef struct s_table
 	int				time_to_sleep;
 	int				flag_must_eat;
 	int				must_eat_rounds;
+	int				flag_all_ate;
 	int				flag_dead;
 	long			start_time;
 	pthread_mutex_t	*forks;

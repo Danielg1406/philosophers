@@ -70,9 +70,13 @@ int	initialize_table(int argc, char **argv, t_table *table)
 	{
 		table->flag_must_eat = 1;
 		table->must_eat_rounds = ft_atol(argv[5]);
+		table->flag_all_ate = 0;
 	}
 	else
+	{
 		table->flag_must_eat = 0;
+		table->flag_all_ate = 1;
+	}
 	if (!argument_checker(argc, argv) || !alloc_table(table))
 		return (0);
 	table->flag_dead = 0;

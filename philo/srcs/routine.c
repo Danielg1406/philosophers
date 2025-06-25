@@ -23,7 +23,7 @@ static void	philo_sleep(t_philosopher *philo)
 	msleep(philo->table->time_to_sleep, philo->table);
 }
 
-static int	philo_eat(t_philosopher *philo)
+static void	philo_eat(t_philosopher *philo)
 {
 	if (philo->id % 2 == 0)
 	{
@@ -45,10 +45,6 @@ static int	philo_eat(t_philosopher *philo)
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 	philo->meals_eaten++;
-	if (philo->table->flag_must_eat
-		&& (philo->meals_eaten >= philo->table->must_eat_rounds))
-		return (1);
-	return (0);
 }
 
 static void	handle_single_philo(t_philosopher *philo)
@@ -76,11 +72,10 @@ void	*philo_routine(void *arg)
 	}
 	if (philo->id % 2 == 0)
 		msleep(table->time_to_eat, table);
-	while (!table->flag_dead)
+	while (!table->flag_dead && !(table->flag_must_eat && table->flag_all_ate))
 	{
 		philo_think(philo);
-		if (philo_eat(philo))
-			break ;
+		philo_eat(philo);
 		philo_sleep(philo);
 	}
 	return (NULL);
