@@ -20,10 +20,18 @@ void	sleep_gap(void)
 void	go_to_bed(long ms, t_table *t)
 {
 	long	start;
+	int		dead;
 
 	start = present_ms();
-	while (!t->flag_dead && (present_ms() - start < ms))
+	while (1)
+	{
+		pthread_mutex_lock(&t->state_mutex);
+		dead = t->flag_dead;
+		pthread_mutex_unlock(&t->state_mutex);
+		if (dead || (present_ms() - start >= ms))
+			break ;
 		sleep_gap();
+	}
 }
 
 long	present_ms(void)

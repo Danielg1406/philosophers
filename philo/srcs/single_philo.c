@@ -20,5 +20,7 @@ void	handle_single_philo(t_philosopher *philo)
 	go_to_bed(philo->table->time_to_die, philo->table);
 	pthread_mutex_unlock(philo->left_fork);
 	print_status(philo->table, philo->id, "died");
+	pthread_mutex_lock(&philo->table->state_mutex);
 	philo->table->flag_dead = 1;
+	pthread_mutex_unlock(&philo->table->state_mutex);
 }
