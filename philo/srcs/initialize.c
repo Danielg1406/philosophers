@@ -14,7 +14,7 @@
 
 int	create_philos(t_table *table)
 {
-	int			i;
+	int	i;
 
 	i = 0;
 	while (i < table->philos_amount)
@@ -66,6 +66,10 @@ int	initialize_table(int argc, char **argv, t_table *table)
 	table->time_to_die = ft_atol(argv[2]);
 	table->time_to_eat = ft_atol(argv[3]);
 	table->time_to_sleep = ft_atol(argv[4]);
+	table->time_to_think = table->time_to_die - table->time_to_eat
+		- table->time_to_sleep;
+	if (table->time_to_think < 0)
+		table->time_to_think = 0;
 	if (argc == 6)
 	{
 		table->flag_must_eat = 1;

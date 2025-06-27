@@ -40,6 +40,7 @@ typedef struct s_table
 	int							time_to_die;
 	int							time_to_eat;
 	int							time_to_sleep;
+	int							time_to_think;
 	int							flag_must_eat;
 	int							must_eat_rounds;
 	int							flag_all_ate;
@@ -69,6 +70,7 @@ void							print_status(t_table *table, int id, char *msg);
 // ROUTINES
 void							*philo_routine(void *arg);
 void							*watcher_routine(void *arg);
+void							handle_single_philo(t_philosopher *philo);
 
 // TIME
 void							sleep_gap(void);

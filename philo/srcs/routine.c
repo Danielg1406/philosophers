@@ -18,6 +18,12 @@ static void	philo_sleep(t_philosopher *philo)
 	go_to_bed(philo->table->time_to_sleep, philo->table);
 }
 
+static void	philo_think(t_philosopher *philo)
+{
+	print_status(philo->table, philo->id, "is thinking");
+	go_to_bed(philo->table->time_to_think, philo->table);
+}
+
 static void	philo_eat(t_philosopher *philo)
 {
 	if (philo->id % 2 == 0)
@@ -46,17 +52,6 @@ static void	philo_eat(t_philosopher *philo)
 	pthread_mutex_unlock(&philo->table->state_mutex);
 }
 
-static void	handle_single_philo(t_philosopher *philo)
-{
-	print_status(philo->table, philo->id, "is thinking");
-	pthread_mutex_lock(philo->left_fork);
-	print_status(philo->table, philo->id, "has taken a fork");
-	go_to_bed(philo->table->time_to_die, philo->table);
-	pthread_mutex_unlock(philo->left_fork);
-	print_status(philo->table, philo->id, "died");
-	philo->table->flag_dead = 1;
-}
-
 static void	philo_round(t_philosopher *philo)
 {
 	int	dead;
@@ -78,7 +73,7 @@ static void	philo_round(t_philosopher *philo)
 		if (done)
 			break ;
 		philo_sleep(philo);
-		print_status(philo->table, philo->id, "is thinking");
+		philo_think(philo);
 	}
 }
 

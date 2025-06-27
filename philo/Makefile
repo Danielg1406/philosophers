@@ -13,6 +13,7 @@ SRCS = srcs/main.c \
 			 srcs/routine.c \
 			 srcs/time.c \
 			 srcs/watcher.c \
+			 srcs/single_philo.c \
 
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
